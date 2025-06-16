@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const applyFilterBtn = document.getElementById("apply-filter");
   const clearFilterBtn = document.getElementById("clear-filter");
 
-  // Initialize transactions array from localStorage or empty array
+  // Initialize transactions array from localStorage or an empty array
   let transactions = JSON.parse(localStorage.getItem("transactions")) || [];
 
   function init() {
@@ -28,7 +28,10 @@ document.addEventListener("DOMContentLoaded", function () {
   // Add a new transaction
   function addTransaction(e) {
     e.preventDefault();
+<<<<<<< HEAD
 
+=======
+>>>>>>> 43a3bf3e9a9f9eb1eeb746e85d7d9a695a996c03
     if (!descriptionInput.value || !amountInput.value || !dateInput.value) {
       alert("Please fill in all fields");
       return;
@@ -42,7 +45,6 @@ document.addEventListener("DOMContentLoaded", function () {
       date: dateInput.value,
     };
 
-    // Add to transactions array
     transactions.push(transaction);
 
     updateLocalStorage();
@@ -60,8 +62,13 @@ document.addEventListener("DOMContentLoaded", function () {
   // Render transactions list with optional date filtering
   function renderTransactions() {
     transactionsList.innerHTML = "";
+<<<<<<< HEAD
 
     let filteredTransactions = [...transactions];
+=======
+    let filteredTransactions = [...transactions];
+
+>>>>>>> 43a3bf3e9a9f9eb1eeb746e85d7d9a695a996c03
     if (filterDateFrom.value) {
       filteredTransactions = filteredTransactions.filter(
         (transaction) =>
@@ -143,7 +150,10 @@ document.addEventListener("DOMContentLoaded", function () {
       0
     );
     balanceElement.textContent = `$${total.toFixed(2)}`;
+<<<<<<< HEAD
 
+=======
+>>>>>>> 43a3bf3e9a9f9eb1eeb746e85d7d9a695a996c03
     if (total > 0) {
       balanceElement.style.color = "var(--income-color)";
     } else if (total < 0) {
@@ -173,8 +183,6 @@ document.addEventListener("DOMContentLoaded", function () {
     descriptionInput.value = transaction.description;
     amountInput.value = transaction.amount;
     dateInput.value = transaction.date;
-
-    // Remove the transaction being edited
     transactions = transactions.filter((t) => t.id !== id);
 
     // Update UI and storage
@@ -196,7 +204,6 @@ document.addEventListener("DOMContentLoaded", function () {
     renderTransactions();
   }
 
-  // Update localStorage with current transactions
   function updateLocalStorage() {
     localStorage.setItem("transactions", JSON.stringify(transactions));
   }
