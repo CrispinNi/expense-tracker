@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // DOM Elements
   const expenseForm = document.getElementById("expense-form");
   const descriptionInput = document.getElementById("description");
   const amountInput = document.getElementById("amount");
@@ -11,12 +10,10 @@ document.addEventListener("DOMContentLoaded", function () {
   const applyFilterBtn = document.getElementById("apply-filter");
   const clearFilterBtn = document.getElementById("clear-filter");
 
-  // Initialize transactions array from localStorage or empty array
+  // Initialize transactions array from localStorage or an empty array
   let transactions = JSON.parse(localStorage.getItem("transactions")) || [];
 
-  // Initialize the app
   function init() {
-    // Event listeners
     expenseForm.addEventListener("submit", addTransaction);
     applyFilterBtn.addEventListener("click", applyDateFilter);
     clearFilterBtn.addEventListener("click", clearDateFilter);
@@ -31,8 +28,6 @@ document.addEventListener("DOMContentLoaded", function () {
   // Add a new transaction
   function addTransaction(e) {
     e.preventDefault();
-
-    // Validate inputs
     if (!descriptionInput.value || !amountInput.value || !dateInput.value) {
       alert("Please fill in all fields");
       return;
@@ -46,10 +41,8 @@ document.addEventListener("DOMContentLoaded", function () {
       date: dateInput.value,
     };
 
-    // Add to transactions array
     transactions.push(transaction);
 
-    // Update UI and storage
     updateLocalStorage();
     renderTransactions();
     updateBalance();
@@ -66,11 +59,8 @@ document.addEventListener("DOMContentLoaded", function () {
   // Render transactions list with optional date filtering
   function renderTransactions() {
     transactionsList.innerHTML = "";
-
-    // Start with all transactions
     let filteredTransactions = [...transactions];
 
-    // Apply date filters if set
     if (filterDateFrom.value) {
       filteredTransactions = filteredTransactions.filter(
         (transaction) =>
@@ -79,7 +69,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     if (filterDateTo.value) {
-      // Include the entire end date (up to 23:59:59)
       const endDate = new Date(filterDateTo.value);
       endDate.setHours(23, 59, 59, 999);
 
@@ -95,7 +84,6 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    // Sort by date (newest first)
     filteredTransactions.sort((a, b) => new Date(b.date) - new Date(a.date));
 
     // Create transaction items
@@ -156,8 +144,6 @@ document.addEventListener("DOMContentLoaded", function () {
       0
     );
     balanceElement.textContent = `$${total.toFixed(2)}`;
-
-    // Color code based on balance
     if (total > 0) {
       balanceElement.style.color = "var(--income-color)";
     } else if (total < 0) {
@@ -188,8 +174,6 @@ document.addEventListener("DOMContentLoaded", function () {
     descriptionInput.value = transaction.description;
     amountInput.value = transaction.amount;
     dateInput.value = transaction.date;
-
-    // Remove the transaction being edited
     transactions = transactions.filter((t) => t.id !== id);
 
     // Update UI and storage
@@ -197,7 +181,6 @@ document.addEventListener("DOMContentLoaded", function () {
     renderTransactions();
     updateBalance();
 
-    // Scroll to form for better UX
     document
       .querySelector(".form-section")
       .scrollIntoView({ behavior: "smooth" });
@@ -207,19 +190,14 @@ document.addEventListener("DOMContentLoaded", function () {
   function applyDateFilter() {
     renderTransactions();
   }
-
-  // Clear date filters
   function clearDateFilter() {
     filterDateFrom.value = "";
     filterDateTo.value = "";
     renderTransactions();
   }
 
-  // Update localStorage with current transactions
   function updateLocalStorage() {
     localStorage.setItem("transactions", JSON.stringify(transactions));
   }
-
-  // Initialize the app
   init();
 });
