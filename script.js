@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // DOM Elements
   const expenseForm = document.getElementById("expense-form");
   const descriptionInput = document.getElementById("description");
   const amountInput = document.getElementById("amount");
@@ -14,9 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // Initialize transactions array from localStorage or empty array
   let transactions = JSON.parse(localStorage.getItem("transactions")) || [];
 
-  // Initialize the app
   function init() {
-    // Event listeners
     expenseForm.addEventListener("submit", addTransaction);
     applyFilterBtn.addEventListener("click", applyDateFilter);
     clearFilterBtn.addEventListener("click", clearDateFilter);
@@ -32,7 +29,6 @@ document.addEventListener("DOMContentLoaded", function () {
   function addTransaction(e) {
     e.preventDefault();
 
-    // Validate inputs
     if (!descriptionInput.value || !amountInput.value || !dateInput.value) {
       alert("Please fill in all fields");
       return;
@@ -49,12 +45,10 @@ document.addEventListener("DOMContentLoaded", function () {
     // Add to transactions array
     transactions.push(transaction);
 
-    // Update UI and storage
     updateLocalStorage();
     renderTransactions();
     updateBalance();
 
-    // Reset form
     expenseForm.reset();
   }
 
@@ -67,10 +61,7 @@ document.addEventListener("DOMContentLoaded", function () {
   function renderTransactions() {
     transactionsList.innerHTML = "";
 
-    // Start with all transactions
     let filteredTransactions = [...transactions];
-
-    // Apply date filters if set
     if (filterDateFrom.value) {
       filteredTransactions = filteredTransactions.filter(
         (transaction) =>
@@ -79,7 +70,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     if (filterDateTo.value) {
-      // Include the entire end date (up to 23:59:59)
       const endDate = new Date(filterDateTo.value);
       endDate.setHours(23, 59, 59, 999);
 
@@ -95,7 +85,6 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    // Sort by date (newest first)
     filteredTransactions.sort((a, b) => new Date(b.date) - new Date(a.date));
 
     // Create transaction items
@@ -136,14 +125,12 @@ document.addEventListener("DOMContentLoaded", function () {
       transactionsList.appendChild(li);
     });
 
-    // Show transaction count
     const countDisplay = document.createElement("div");
     countDisplay.className = "filter-count";
     countDisplay.textContent = `Showing ${filteredTransactions.length} of ${transactions.length} transactions`;
     transactionsList.insertBefore(countDisplay, transactionsList.firstChild);
   }
 
-  // Format date for display
   function formatDate(dateString) {
     const options = { year: "numeric", month: "short", day: "numeric" };
     return new Date(dateString).toLocaleDateString(undefined, options);
@@ -157,7 +144,6 @@ document.addEventListener("DOMContentLoaded", function () {
     );
     balanceElement.textContent = `$${total.toFixed(2)}`;
 
-    // Color code based on balance
     if (total > 0) {
       balanceElement.style.color = "var(--income-color)";
     } else if (total < 0) {
@@ -184,7 +170,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const transaction = transactions.find((t) => t.id === id);
     if (!transaction) return;
 
-    // Populate form with transaction data
     descriptionInput.value = transaction.description;
     amountInput.value = transaction.amount;
     dateInput.value = transaction.date;
@@ -197,18 +182,14 @@ document.addEventListener("DOMContentLoaded", function () {
     renderTransactions();
     updateBalance();
 
-    // Scroll to form for better UX
     document
       .querySelector(".form-section")
       .scrollIntoView({ behavior: "smooth" });
   }
 
-  // Apply date filters
   function applyDateFilter() {
     renderTransactions();
   }
-
-  // Clear date filters
   function clearDateFilter() {
     filterDateFrom.value = "";
     filterDateTo.value = "";
@@ -219,7 +200,5 @@ document.addEventListener("DOMContentLoaded", function () {
   function updateLocalStorage() {
     localStorage.setItem("transactions", JSON.stringify(transactions));
   }
-
-  // Initialize the app
   init();
 });
